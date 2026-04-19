@@ -1,0 +1,29 @@
+# Backend
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# IDE
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Spring
+*.log
+logs/
+
+# Environment
+.env
+application-local.yml
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,49 @@
+# ================================
+# METROHUB .gitignore
+# ================================
+
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+backend/target/
+frontend/build/
+frontend/dist/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.iws
+*.iml
+*.ipr
+*.swp
+*.swo
+
+# Logs
+*.log
+*.log.*
+logs/
+backend/logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Uploads (local storage)
+uploads/
+
+# Maven
+.mvn/
+
+# Backup files
+*.tar.gz
+*.bak
+
+# Gemini
+.gemini/
