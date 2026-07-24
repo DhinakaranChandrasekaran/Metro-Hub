@@ -777,28 +777,6 @@ Frontend starts at: `http://localhost:3000`
 
 ---
 
-## Environment Variables
-
-All configurable via environment variables (with defaults in `application.properties`):
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `MAIL_HOST` | `smtp.gmail.com` | SMTP server |
-| `MAIL_PORT` | `587` | SMTP port |
-| `MAIL_USERNAME` | - | Email username |
-| `MAIL_PASSWORD` | - | Email app password |
-| `S3_BUCKET_NAME` | `metrohubdocumentstore` | AWS S3 bucket |
-| `S3_ACCESS_KEY` | - | AWS access key |
-| `S3_SECRET_KEY` | - | AWS secret key |
-| `S3_REGION` | `ap-south-2` | AWS region |
-| `JWT_SECRET` | - | JWT signing secret (256-bit) |
-| `TWILIO_ACCOUNT_SID` | - | Twilio account SID |
-| `TWILIO_AUTH_TOKEN` | - | Twilio auth token |
-| `TWILIO_PHONE_NUMBER` | - | Twilio from number |
-| `SMS_MOCK_ENABLED` | `true` | Mock SMS in development |
-
----
-
 <p align="center">
   <strong>Built with ❤️ for Indian Metro Systems</strong><br/>
   <em>MetroHub — Digitizing Metro Document Intelligence</em>
