@@ -108,43 +108,43 @@ The system addresses critical challenges faced by metro organizations:
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                        FRONTEND (React 18)                       │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐            │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐             │
 │  │ Welcome  │ │Dashboard │ │Documents │ │ Upload   │  ...16 pages│
-│  │  Page    │ │  Page    │ │  Page    │ │  Page    │            │
-│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘            │
-│       │             │            │             │                  │
+│  │  Page    │ │  Page    │ │  Page    │ │  Page    │             │
+│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘             │
+│       │             │            │             │                 │
 │  ┌────┴─────────────┴────────────┴─────────────┴──────────────┐  │
-│  │              Services Layer (Axios + JWT Interceptor)       │  │
-│  │  authService │ documentService │ dashboardService │ ...     │  │
+│  │              Services Layer (Axios + JWT Interceptor)      │  │
+│  │  authService │ documentService │ dashboardService │ ...    │  │
 │  └──────────────────────────┬─────────────────────────────────┘  │
 └─────────────────────────────┼────────────────────────────────────┘
                               │ REST API (JSON)
                               │ Port 8080 /api/*
 ┌─────────────────────────────┼────────────────────────────────────┐
-│                     BACKEND (Spring Boot 3.2)                     │
+│                     BACKEND (Spring Boot 3.2)                    │
 │  ┌──────────────────────────┴─────────────────────────────────┐  │
-│  │                    Controller Layer (9)                     │  │
+│  │                    Controller Layer (9)                    │  │
 │  │  Auth │ Document │ Dashboard │ Alert │ Analytics │ ...     │  │
 │  └──────────────────────────┬─────────────────────────────────┘  │
 │  ┌──────────────────────────┴─────────────────────────────────┐  │
-│  │                     Service Layer (26)                      │  │
+│  │                     Service Layer (26)                     │  │
 │  │  AuthService │ DocumentService │ ComplianceScheduler │ ... │  │
 │  └──────────────────────────┬─────────────────────────────────┘  │
 │  ┌──────────────────────────┴─────────────────────────────────┐  │
-│  │                   Repository Layer (11)                     │  │
-│  │               Spring Data JPA + Custom Queries              │  │
+│  │                   Repository Layer (11)                    │  │
+│  │               Spring Data JPA + Custom Queries             │  │
 │  └──────────────────────────┬─────────────────────────────────┘  │
 │  ┌──────────────────────────┴─────────────────────────────────┐  │
-│  │                    Security Layer                           │  │
-│  │         JWT Filter → UserDetailsService → SecurityConfig    │  │
+│  │                    Security Layer                          │  │
+│  │         JWT Filter → UserDetailsService → SecurityConfig   │  │
 │  └────────────────────────────────────────────────────────────┘  │
 └─────────────────────────────┼────────────────────────────────────┘
                               │
               ┌───────────────┼───────────────┐
               │               │               │
         ┌─────┴─────┐  ┌─────┴─────┐  ┌──────┴──────┐
-        │  MySQL 8   │  │  AWS S3   │  │ Email/SMS   │
-        │ 11 Tables  │  │  Storage  │  │ Twilio/SMTP │
+        │  MySQL 8  │  │  AWS S3   │  │ Email/SMS   │
+        │ 11 Tables │  │  Storage  │  │ Twilio/SMTP │
         └───────────┘  └───────────┘  └─────────────┘
 ```
 
@@ -701,102 +701,6 @@ MetroHub uses **11 tables** in MySQL 8.0:
 | 11 | `document_reminders` | Dynamic | Custom document reminders |
 
 The complete schema with CREATE statements, INSERT data, and cleanup operations is in [`database/schema.sql`](database/schema.sql).
-
----
-
-## API Endpoints
-
-### Authentication
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/login` | Login with email + password |
-| POST | `/api/auth/logout` | Logout (blacklist token) |
-| GET | `/api/auth/me` | Get current user profile |
-| PUT | `/api/auth/profile` | Update profile |
-| PUT | `/api/auth/change-password` | Change password |
-
-### Documents
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/documents/upload` | Upload document (multipart) |
-| GET | `/api/documents` | List documents (paginated) |
-| GET | `/api/documents/{id}` | Get document details |
-| GET | `/api/documents/{id}/download` | Download original file |
-| DELETE | `/api/documents/{id}` | Delete document |
-| GET | `/api/documents/search` | Full-text search |
-| GET | `/api/documents/{id}/sla-config` | Get SLA configuration |
-
-### Acknowledgements
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/documents/{id}/acknowledge` | Acknowledge a document |
-| GET | `/api/documents/{id}/acknowledgements` | List acknowledgements |
-| GET | `/api/documents/{id}/department-users` | Get department users |
-| GET | `/api/documents/pending-acknowledgements` | Pending acknowledgements |
-
-### Dashboard
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/dashboard/stats` | Dashboard statistics |
-| GET | `/api/dashboard/department-stats` | Department breakdown |
-| GET | `/api/dashboard/recent-activity` | Recent activity feed |
-
-### Alerts & Notifications
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/alerts` | Get user alerts |
-| GET | `/api/alerts/unread-count` | Unread notification count |
-| PUT | `/api/alerts/{id}/read` | Mark alert as read |
-| PUT | `/api/alerts/mark-all-read` | Mark all as read |
-| DELETE | `/api/alerts/{id}` | Delete alert |
-
-### Policies
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/policies` | List all policies |
-| POST | `/api/policies` | Create policy rule |
-| PUT | `/api/policies/{id}` | Update policy rule |
-| DELETE | `/api/policies/{id}` | Delete policy rule |
-
-### Legal Hold
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| PUT | `/api/documents/{id}/legal-hold` | Apply legal hold |
-| DELETE | `/api/documents/{id}/legal-hold` | Remove legal hold |
-| GET | `/api/documents/legal-holds` | List documents under hold |
-
-### Compliance & Violations
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/violations` | List violations |
-| GET | `/api/violations/department/{deptId}` | Violations by department |
-| PUT | `/api/violations/{id}/resolve` | Resolve violation |
-
-### Analytics
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/analytics/overview` | Analytics overview |
-| GET | `/api/analytics/department/{deptId}` | Department analytics |
-| GET | `/api/analytics/risk-scores` | Risk scores |
-| POST | `/api/analytics/trigger-risk-calculation` | Trigger recalculation |
-
-### Reports
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/reports/documents/excel` | Document report (Excel) |
-| GET | `/api/reports/documents/pdf` | Document report (PDF) |
-| GET | `/api/reports/acknowledgements/excel` | Acknowledgement report |
-| GET | `/api/reports/compliance/excel` | Compliance report |
-| GET | `/api/reports/audit/excel` | Audit trail report |
-
-### Users
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/users` | List users |
-| POST | `/api/users` | Create user |
-| PUT | `/api/users/{id}` | Update user |
-| DELETE | `/api/users/{id}` | Deactivate user |
-| GET | `/api/users/department/{deptId}` | Users by department |
 
 ---
 
