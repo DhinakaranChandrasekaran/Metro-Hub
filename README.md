@@ -116,12 +116,12 @@ The system addresses critical challenges faced by metro organizations:
 
 ---
 
-## Role-Based Access Control (RBAC)
-
+**## Role-Based Access Control (RBAC)
+**
 MetroHub implements a 4-role RBAC system with granular permissions:
 
-### Role Hierarchy
-
+**### Role Hierarchy
+**
 | Role | Scope | Description |
 |------|-------|-------------|
 | **SUPER_ADMIN** | Global | Full system access. Views all departments' data. Can remove legal holds, manage all users, access all analytics. |
@@ -129,8 +129,8 @@ MetroHub implements a 4-role RBAC system with granular permissions:
 | **DEPARTMENT_UPLOAD_ADMIN** | Department | Uploads documents, sets SLA, applies legal holds. Manages acknowledgements and policies for their department. |
 | **DEPARTMENT_USER** | Department | End user. Views documents in their department, acknowledges them, receives notifications. |
 
-### Permission Matrix
-
+**### Permission Matrix
+**
 | Permission | Super Admin | Dept Admin | Upload Admin | Dept User |
 |------------|:-----------:|:----------:|:------------:|:---------:|
 | View Dashboard | ✅ (Global) | ✅ (Dept) | ✅ (Dept) | ✅ (Dept) |
@@ -155,8 +155,8 @@ MetroHub implements a 4-role RBAC system with granular permissions:
 
 ---
 
-## Module-by-Module Breakdown
-
+**## Module-by-Module Breakdown
+**
 ### 1. Authentication & Authorization
 
 - **Login Flow:** Email + Password → BCrypt verification → JWT access token (24h) + refresh token (7d)
@@ -359,129 +359,6 @@ Each stage can use different channels based on policy configuration:
 - **Profile Tab:** View and update current user's profile information
 - **Security Tab:** Change password
 - **About Tab:** System information and version details
-
----
-
-## SLA Workflow — All Scenarios
-
-### Scenario 1: Happy Path (User Acknowledges on Time)
-
-```
-T=0h    Upload Admin uploads a MEDIUM priority document to Maintenance dept
-        → System finds policy: Global Default (reminder=24h, escalation=48h/72h, violation=168h)
-        → Notifications sent to all DEPARTMENT_USER in Maintenance
-
-T=12h   Maint Technician 1 opens and acknowledges the document ✅
-        → Acknowledgement recorded with timestamp
-        → No further escalation needed for this user
-```
-
-**Result:** No violation. Clean compliance record.
-
----
-
-### Scenario 2: Late Acknowledgement (After Reminder, Before Violation)
-
-```
-T=0h    Document uploaded (MEDIUM priority, Maintenance dept)
-T=24h   ⚠️ Stage 1 REMINDER sent to pending users (Dashboard + Email)
-T=36h   Maint Technician 1 acknowledges ✅ (late, but before violation)
-T=48h   ⚠️ Stage 2 DEPT ADMIN ESCALATION sent (but Technician 1 already acknowledged)
-```
-
-**Result:** No violation created. Technician 1 acknowledged late but within the violation window.
-
----
-
-### Scenario 3: Full Escalation → Violation Created
-
-```
-T=0h    Document uploaded (MEDIUM priority, Safety dept)
-T=24h   ⚠️ Stage 1 REMINDER sent to Safety Inspector (Dashboard + Email + SMS)
-T=48h   🔶 Stage 2 DEPT ADMIN ESCALATION → Safety Manager notified
-T=72h   🔴 Stage 3 SUPER ADMIN ESCALATION → System Admin notified
-T=168h  ❌ Stage 4 VIOLATION CREATED → Permanent compliance violation record
-        → Safety Inspector now has a violation on their record
-        → Department risk score increases
-```
-
-**Result:** Compliance violation permanently recorded. Requires admin resolution.
-
----
-
-### Scenario 4: Safety HIGH Priority (Fastest Escalation)
-
-```
-T=0h    SAFETY CIRCULAR uploaded with HIGH priority to Safety dept
-        → System finds policy: "Safety HIGH Priority" (reminder=6h, escalation=12h/24h, violation=48h)
-
-T=6h    ⚠️ REMINDER sent (Dashboard + Email + SMS — all 3 channels enabled)
-T=12h   🔶 DEPT ADMIN ESCALATION to Safety Manager
-T=24h   🔴 SUPER ADMIN ESCALATION to System Admin
-T=48h   ❌ VIOLATION CREATED (only 2 days vs 7 days for default!)
-```
-
-**Result:** Safety documents get fastest enforcement. Critical for safety compliance.
-
----
-
-### Scenario 5: Manual SLA Override
-
-```
-T=0h    Upload Admin uploads document and manually sets SLA = 12 hours
-        → Manual SLA takes precedence over any policy rule
-        → System uses 12h for all escalation calculations
-
-T=12h   If not acknowledged → escalation begins based on 12h baseline
-```
-
-**Result:** Manual SLA gives upload admins fine-grained control for urgent documents.
-
----
-
-### Scenario 6: HR LOW Priority (Relaxed — No Violations)
-
-```
-T=0h    HR document uploaded with LOW priority
-        → System finds policy: "HR LOW Priority" (reminder=48h, escalation=0h, violation=0h)
-
-T=48h   ⚠️ REMINDER sent (Dashboard only — email/SMS disabled)
-        → No further escalation (escalation_hours = 0)
-        → No violation creation (violation_hours = 0)
-```
-
-**Result:** Low priority HR documents only get a reminder, never escalate or create violations.
-
----
-
-### Scenario 7: Legal Hold Prevents Deletion
-
-```
-T=0h    Document uploaded and processing begins
-T=24h   Legal Officer applies Legal Hold with reason: "Under investigation"
-        → document.legal_hold = true
-        → Document cannot be deleted or modified by anyone
-T=72h   Department Admin tries to delete → BLOCKED ❌ "Document under legal hold"
-T=168h  Violation may still be created (legal hold doesn't stop SLA)
-T=720h  Super Admin removes legal hold → Document can now be deleted
-```
-
-**Result:** Legal hold protects document integrity during investigations.
-
----
-
-### Scenario 8: Late Acknowledgement After Violation
-
-```
-T=0h    Document uploaded
-T=168h  ❌ Violation created for Safety Inspector (168h = 7 days)
-T=200h  Safety Inspector finally acknowledges the document
-        → Violation updated: acknowledged_late = true, late_acknowledgement_date recorded
-        → Violation remains on record (acknowledged_late does NOT resolve it)
-        → Violation must still be resolved by an admin
-```
-
-**Result:** Late acknowledgement is recorded but doesn't auto-resolve the violation.
 
 ---
 
