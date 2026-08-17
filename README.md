@@ -361,9 +361,9 @@ Each stage can use different channels based on policy configuration:
 - **About Tab:** System information and version details
 
 ---
-
-
-<p align="center">
-  <strong>Built with ❤️ for Indian Metro Systems</strong><br/>
-  <em>MetroHub — Digitizing Metro Document Intelligence</em>
+<p>
+  <p align="center">
+    <strong>Built with ❤️ for Indian Metro Systems</strong><br/>
+    <em>MetroHub — Digitizing Metro Document Intelligence</em>
+  </p>
 </p>
