@@ -10,38 +10,6 @@
 
 ---
 
-## 📑 Table of Contents
-
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Technology Stack](#technology-stack)
-- [Architecture](#architecture)
-- [Project Structure](#project-structure)
-- [Role-Based Access Control (RBAC)](#role-based-access-control-rbac)
-- [Module-by-Module Breakdown](#module-by-module-breakdown)
-  - [Authentication & Authorization](#1-authentication--authorization)
-  - [Dashboard](#2-dashboard)
-  - [Document Management](#3-document-management)
-  - [Document Upload & Processing](#4-document-upload--processing)
-  - [Text Extraction & NLP](#5-text-extraction--nlp)
-  - [Acknowledgement System](#6-acknowledgement-system)
-  - [SLA & Compliance Engine (Detailed)](#7-sla--compliance-engine)
-  - [Notifications & Alerts](#8-notifications--alerts)
-  - [Policy Management](#9-policy-management)
-  - [Compliance Violations](#10-compliance-violations)
-  - [Analytics & Risk Assessment](#11-analytics--risk-assessment)
-  - [Reports & Export](#12-reports--export)
-  - [User Management](#13-user-management)
-  - [Settings](#14-settings)
-- [SLA Workflow — All Scenarios](#sla-workflow--all-scenarios)
-- [Database Schema](#database-schema)
-- [API Endpoints](#api-endpoints)
-- [Setup & Installation](#setup--installation)
-- [Default Credentials](#default-credentials)
-- [Environment Variables](#environment-variables)
-
----
-
 ## Overview
 
 **MetroHub** is an AI-powered documentation management system designed specifically for Indian metropolitan transit authorities (e.g., DMRC, BMRC, CMRL, NMRC). It digitizes the entire document lifecycle — from upload and intelligent classification to acknowledgement tracking, SLA compliance enforcement, and risk-based analytics.
@@ -119,7 +87,6 @@ The system addresses critical challenges faced by metro organizations:
 │  └──────────────────────────┬─────────────────────────────────┘  │
 └─────────────────────────────┼────────────────────────────────────┘
                               │ REST API (JSON)
-                              │ Port 8080 /api/*
 ┌─────────────────────────────┼────────────────────────────────────┐
 │                     BACKEND (Spring Boot 3.2)                    │
 │  ┌──────────────────────────┴─────────────────────────────────┐  │
@@ -146,130 +113,6 @@ The system addresses critical challenges faced by metro organizations:
         │  MySQL 8  │  │  AWS S3   │  │ Email/SMS   │
         │ 11 Tables │  │  Storage  │  │ Twilio/SMTP │
         └───────────┘  └───────────┘  └─────────────┘
-```
-
----
-
-## Project Structure
-
-```
-METRO-HUB/
-├── .gitignore
-├── README.md                          ← This file
-│
-├── database/
-│   └── schema.sql                     ← Complete DB schema + data + cleanup
-│
-├── backend/                           ← Spring Boot 3.2 API
-│   ├── pom.xml
-│   └── src/main/
-│       ├── resources/
-│       │   └── application.properties
-│       └── java/com/metrohub/
-│           ├── MetroHubApplication.java
-│           ├── config/
-│           │   ├── AsyncConfig.java
-│           │   ├── S3Config.java
-│           │   └── SecurityConfig.java
-│           ├── controllers/           ← 9 REST controllers
-│           │   ├── AuthController.java
-│           │   ├── DocumentController.java
-│           │   ├── DashboardController.java
-│           │   ├── AlertController.java
-│           │   ├── AnalyticsController.java
-│           │   ├── PolicyController.java
-│           │   ├── ReportController.java
-│           │   ├── UserController.java
-│           │   └── ViolationController.java
-│           ├── services/              ← 26 service classes
-│           │   ├── AuthService.java
-│           │   ├── DocumentService.java
-│           │   ├── DocumentClassificationService.java
-│           │   ├── DocumentNlpService.java
-│           │   ├── TextExtractionService.java
-│           │   ├── TextExtractionProcessingService.java
-│           │   ├── OcrService.java
-│           │   ├── SearchService.java
-│           │   ├── FileStorageService.java
-│           │   ├── LocalFileStorageService.java
-│           │   ├── S3FileStorageService.java
-│           │   ├── AcknowledgementService.java
-│           │   ├── NotificationService.java
-│           │   ├── AlertService.java
-│           │   ├── ComplianceSchedulerService.java
-│           │   ├── ComplianceViolationService.java
-│           │   ├── PolicyService.java
-│           │   ├── LegalHoldService.java
-│           │   ├── DocumentReminderService.java
-│           │   ├── DashboardService.java
-│           │   ├── AnalyticsService.java
-│           │   ├── RiskCalculationService.java
-│           │   ├── ReportExportService.java
-│           │   ├── AuditReportService.java
-│           │   ├── UserService.java
-│           │   └── TokenBlacklistService.java
-│           ├── models/                ← 11 JPA entities
-│           ├── repositories/          ← 11 JPA repositories
-│           ├── dto/                   ← 12 DTO classes
-│           ├── security/              ← JWT + Spring Security
-│           │   ├── JwtTokenProvider.java
-│           │   ├── JwtAuthenticationFilter.java
-│           │   ├── CustomUserDetailsService.java
-│           │   └── SecurityUtils.java
-│           ├── exception/             ← Custom exceptions
-│           └── util/                  ← Utility classes
-│
-├── frontend/                          ← React 18 SPA
-│   ├── package.json
-│   └── src/
-│       ├── index.js
-│       ├── index.css                  ← Complete design system
-│       ├── App.jsx                    ← Router + RoleGuard
-│       ├── context/
-│       │   ├── AuthContext.jsx        ← JWT auth state + RBAC
-│       │   └── ToastContext.jsx       ← Toast notifications
-│       ├── components/
-│       │   ├── ErrorBoundary.jsx
-│       │   ├── ErrorModal.jsx
-│       │   ├── CustomDropdown.jsx
-│       │   └── layout/
-│       │       ├── Layout.jsx
-│       │       ├── GovHeader.jsx
-│       │       ├── Sidebar.jsx
-│       │       ├── SystemHeader.jsx
-│       │       └── Footer.jsx
-│       ├── pages/                     ← 16 page components
-│       │   ├── WelcomePage.jsx
-│       │   ├── DashboardPage.jsx
-│       │   ├── DocumentsPage.jsx
-│       │   ├── DocumentDetailsPage.jsx
-│       │   ├── ExtractedTextPage.jsx
-│       │   ├── UploadPage.jsx
-│       │   ├── NotificationsPage.jsx
-│       │   ├── AcknowledgementsPage.jsx
-│       │   ├── AcknowledgementTrackingPage.jsx
-│       │   ├── CompliancePage.jsx
-│       │   ├── AnalyticsPage.jsx
-│       │   ├── ReportsPage.jsx
-│       │   ├── PoliciesPage.jsx
-│       │   ├── UsersPage.jsx
-│       │   ├── SettingsPage.jsx
-│       │   └── UnauthorizedPage.jsx
-│       ├── services/                  ← 10 API service modules
-│       │   ├── api.js                 ← Axios instance + JWT interceptor
-│       │   ├── authService.js
-│       │   ├── documentService.js
-│       │   ├── dashboardService.js
-│       │   ├── analyticsService.js
-│       │   ├── notificationService.js
-│       │   ├── policyService.js
-│       │   ├── reportService.js
-│       │   ├── userService.js
-│       │   └── cacheService.js
-│       └── utils/
-│           ├── constants.js
-│           └── errorHandler.js
-```
 
 ---
 
@@ -316,9 +159,6 @@ MetroHub implements a 4-role RBAC system with granular permissions:
 
 ### 1. Authentication & Authorization
 
-**Backend:** `AuthController.java` → `AuthService.java` → `JwtTokenProvider.java`  
-**Frontend:** `WelcomePage.jsx` → `AuthContext.jsx` → `authService.js`
-
 - **Login Flow:** Email + Password → BCrypt verification → JWT access token (24h) + refresh token (7d)
 - **Token Storage:** `sessionStorage` (cleared on tab close for security)
 - **JWT Filter:** Every API request passes through `JwtAuthenticationFilter` which validates the `Authorization: Bearer <token>` header
@@ -329,9 +169,6 @@ MetroHub implements a 4-role RBAC system with granular permissions:
 
 ### 2. Dashboard
 
-**Backend:** `DashboardController.java` → `DashboardService.java`  
-**Frontend:** `DashboardPage.jsx` → `dashboardService.js`
-
 - **Super Admin View:** Global statistics across all departments — total documents, pending acknowledgements, active violations, department comparison charts
 - **Department View:** Department-specific metrics — recent uploads, acknowledgement rates, SLA compliance percentage
 - **Summary Cards:** Total Documents, Pending Acknowledgements, Active Violations, Compliance Rate
@@ -340,9 +177,6 @@ MetroHub implements a 4-role RBAC system with granular permissions:
 ---
 
 ### 3. Document Management
-
-**Backend:** `DocumentController.java` → `DocumentService.java` + `SearchService.java`  
-**Frontend:** `DocumentsPage.jsx` → `DocumentDetailsPage.jsx` → `documentService.js`
 
 - **Document List:** Paginated table with filters (department, type, priority, status)
 - **Search:** Full-text search across file names, extracted text, and tags
@@ -355,9 +189,6 @@ MetroHub implements a 4-role RBAC system with granular permissions:
 ---
 
 ### 4. Document Upload & Processing
-
-**Backend:** `DocumentController.java` → `DocumentService.java` → `FileStorageService.java`  
-**Frontend:** `UploadPage.jsx` → `documentService.js`
 
 The upload flow is a multi-stage pipeline:
 
@@ -378,8 +209,6 @@ User Upload → File Validation → Storage (S3/Local) → Text Extraction (Tika
 
 ### 5. Text Extraction & NLP
 
-**Backend:** `TextExtractionService.java` → `DocumentNlpService.java` → `OcrService.java`
-
 - **Apache Tika:** Extracts text from PDF and Word documents natively
 - **Tesseract OCR:** For scanned images and image-based PDFs (English language)
 - **NLP Processing:** Extracts structured metadata from unstructured text:
@@ -389,14 +218,10 @@ User Upload → File Validation → Storage (S3/Local) → Text Extraction (Tika
   - Reference numbers and dates
   - People names (author, approver, recipient)
   - AI-generated subject and summary
-- **Frontend:** `ExtractedTextPage.jsx` displays extracted text with entity highlighting
 
 ---
 
 ### 6. Acknowledgement System
-
-**Backend:** `AcknowledgementService.java` → `DocumentAcknowledgementRepository.java`  
-**Frontend:** `AcknowledgementsPage.jsx` → `AcknowledgementTrackingPage.jsx`
 
 - **Purpose:** Every `DEPARTMENT_USER` must acknowledge documents uploaded to their department
 - **Acknowledge Action:** User clicks "Acknowledge" → timestamp, IP address, and optional notes recorded
@@ -407,8 +232,6 @@ User Upload → File Validation → Storage (S3/Local) → Text Extraction (Tika
 ---
 
 ### 7. SLA & Compliance Engine
-
-**Backend:** `ComplianceSchedulerService.java` → `PolicyService.java` → `ComplianceViolationService.java`
 
 This is the core automated compliance enforcement engine. It runs on a scheduled basis and processes every active document that has pending acknowledgements.
 
@@ -452,9 +275,6 @@ Each stage can use different channels based on policy configuration:
 
 ### 8. Notifications & Alerts
 
-**Backend:** `NotificationService.java` → `AlertService.java` → `AlertController.java`  
-**Frontend:** `NotificationsPage.jsx` → `notificationService.js`
-
 - **Alert Types:** 11 different alert types (HIGH_PRIORITY_UPLOAD, DEADLINE_APPROACHING, ESCALATION_DEPT_ADMIN, etc.)
 - **Priority-Based Routing:**
   - HIGH priority → Dashboard + Email + SMS
@@ -467,9 +287,6 @@ Each stage can use different channels based on policy configuration:
 ---
 
 ### 9. Policy Management
-
-**Backend:** `PolicyController.java` → `PolicyService.java`  
-**Frontend:** `PoliciesPage.jsx` → `policyService.js`
 
 - **SLA Policy Rules:** Admin-configurable rules that define escalation timelines
 - **Rule Matching:** Each rule targets a specific `department + priority` combination
@@ -486,9 +303,6 @@ Each stage can use different channels based on policy configuration:
 
 ### 10. Compliance Violations
 
-**Backend:** `ViolationController.java` → `ComplianceViolationService.java`  
-**Frontend:** `CompliancePage.jsx`
-
 - **Auto-Created:** by the compliance scheduler when `violation_hours` is exceeded
 - **Violation Record:** Includes document ID, user ID, department, days delayed, which policy rule was applied
 - **Resolution:** Admins can resolve violations with remarks
@@ -498,9 +312,6 @@ Each stage can use different channels based on policy configuration:
 ---
 
 ### 11. Analytics & Risk Assessment
-
-**Backend:** `AnalyticsController.java` → `AnalyticsService.java` → `RiskCalculationService.java`  
-**Frontend:** `AnalyticsPage.jsx` → `analyticsService.js`
 
 - **Super Admin View:** Cross-department analytics with aggregated metrics
 - **Department Admin View:** Department-specific performance analytics
@@ -521,9 +332,6 @@ Each stage can use different channels based on policy configuration:
 
 ### 12. Reports & Export
 
-**Backend:** `ReportController.java` → `ReportExportService.java` → `AuditReportService.java`  
-**Frontend:** `ReportsPage.jsx` → `reportService.js`
-
 - **Report Types:**
   - Document Inventory Report
   - Acknowledgement Status Report
@@ -538,9 +346,6 @@ Each stage can use different channels based on policy configuration:
 
 ### 13. User Management
 
-**Backend:** `UserController.java` → `UserService.java`  
-**Frontend:** `UsersPage.jsx` → `userService.js`
-
 - **Create User:** Add new users with role, department, employee ID, phone number
 - **Edit User:** Update name, email, role, department, phone, active status
 - **Delete User:** Soft deactivation (sets `is_active = false`)
@@ -550,8 +355,6 @@ Each stage can use different channels based on policy configuration:
 ---
 
 ### 14. Settings
-
-**Frontend:** `SettingsPage.jsx`
 
 - **Profile Tab:** View and update current user's profile information
 - **Security Tab:** Change password
@@ -679,101 +482,6 @@ T=200h  Safety Inspector finally acknowledges the document
 ```
 
 **Result:** Late acknowledgement is recorded but doesn't auto-resolve the violation.
-
----
-
-## Database Schema
-
-MetroHub uses **11 tables** in MySQL 8.0:
-
-| # | Table | Records | Purpose |
-|---|-------|---------|---------|
-| 1 | `departments` | 10 | Metro organization departments |
-| 2 | `users` | 18+ | User accounts with RBAC |
-| 3 | `documents` | Dynamic | Uploaded documents with metadata |
-| 4 | `document_metadata` | Dynamic | Extended metadata (1:1 with documents) |
-| 5 | `audit_logs` | Dynamic | Immutable action audit trail |
-| 6 | `alerts` | Dynamic | Multi-channel notifications |
-| 7 | `document_acknowledgements` | Dynamic | User acknowledgement records |
-| 8 | `compliance_violations` | Dynamic | SLA violation records |
-| 9 | `policy_rules` | 6+ | Configurable SLA policies |
-| 10 | `risk_score_snapshots` | Dynamic | Historical risk scores |
-| 11 | `document_reminders` | Dynamic | Custom document reminders |
-
-The complete schema with CREATE statements, INSERT data, and cleanup operations is in [`database/schema.sql`](database/schema.sql).
-
----
-
-## Setup & Installation
-
-### Prerequisites
-
-| Software | Version | Required |
-|----------|---------|----------|
-| Java JDK | 17+ | ✅ |
-| Maven | 3.8+ | ✅ |
-| MySQL | 8.0+ | ✅ |
-| Node.js | 18+ | ✅ |
-| npm | 9+ | ✅ |
-| Tesseract OCR | 5.x | Optional (for OCR) |
-
-### Step 1: Database Setup
-
-```bash
-# Login to MySQL
-mysql -u root -p
-
-# Run the schema file
-source database/schema.sql
-```
-
-This creates the `metrohub_db` database, all 11 tables, and inserts default data (departments, users, policies).
-
-### Step 2: Backend Setup
-
-```bash
-cd backend
-
-# Update database credentials in application.properties if needed:
-# spring.datasource.username=root
-# spring.datasource.password=YOUR_PASSWORD
-
-# Build and run
-mvn clean install -DskipTests
-mvn spring-boot:run
-```
-
-Backend starts at: `http://localhost:8080/api`
-
-### Step 3: Frontend Setup
-
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-npm start
-```
-
-Frontend starts at: `http://localhost:3000`
-
----
-
-## Default Credentials
-
-| Role | Email | Password |
-|------|-------|----------|
-| **Super Admin** | `admin@metrohub.in` | `Admin@123` |
-| **Upload Admin (Maintenance)** | `maint.admin@metrohub.in` | `Upload@123` |
-| **Upload Admin (Safety)** | `safety.admin@metrohub.in` | `Upload@123` |
-| **Upload Admin (HR)** | `hr.admin@metrohub.in` | `Upload@123` |
-| **Dept Admin (Maintenance)** | `maint.manager@metrohub.in` | `Manager@123` |
-| **Dept Admin (Safety)** | `safety.manager@metrohub.in` | `Manager@123` |
-| **Dept Admin (HR)** | `hr.manager@metrohub.in` | `Manager@123` |
-| **Dept User (Maintenance)** | `maint.tech1@metrohub.in` | `User@123` |
-| **Dept User (Safety)** | `safety.inspector@metrohub.in` | `User@123` |
 
 ---
 
