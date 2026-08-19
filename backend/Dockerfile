@@ -59,6 +59,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 # MaxRAMPercentage: use 75% of container memory for heap
 ENTRYPOINT ["java", \
     "-XX:+UseContainerSupport", \
-    "-XX:MaxRAMPercentage=75.0", \
+    "-XX:MaxRAMPercentage=55.0", \
     "-Djava.security.egd=file:/dev/./urandom", \
     "-jar", "app.jar"]
