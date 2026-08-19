@@ -1,0 +1,40 @@
+# ============================================
+# MetroHub Frontend - Docker Build Ignore
+# ============================================
+
+# Dependencies (will be installed fresh in container)
+node_modules/
+
+# Build output (will be built fresh in container)
+build/
+dist/
+
+# Environment files
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+
+# Git
+.git/
+.gitignore
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Documentation
+*.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+coverage/
+
+# Misc
+hash.txt

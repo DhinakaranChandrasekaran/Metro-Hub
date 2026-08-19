@@ -1,0 +1,40 @@
+# ============================================
+# MetroHub Backend - Docker Build Ignore
+# ============================================
+
+# Build outputs
+target/
+
+# Environment files (secrets must NOT be in image)
+.env
+.env.*
+*.env
+
+# Git
+.git/
+.gitignore
+
+# IDE files
+.idea/
+.vscode/
+*.iws
+*.iml
+*.ipr
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Documentation
+*.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Maven wrapper (not used)
+.mvn/
+mvnw
+mvnw.cmd

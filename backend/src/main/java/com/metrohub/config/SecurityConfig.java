@@ -2,6 +2,7 @@ package com.metrohub.config;
 
 import com.metrohub.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -34,6 +35,9 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
+
+    @Value("${metrohub.cors.allowed-origins:http://localhost:5173,http://localhost:3000,http://localhost:3001,http://localhost:8080}")
+    private String corsAllowedOrigins;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -195,13 +199,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Allow React development server and production origins
-        configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:5173",  // Vite default
-            "http://localhost:3000",  // CRA default
-            "http://localhost:3001",  // CRA fallback
-            "http://localhost:8080"   // Backend (for testing)
-        ));
+        // Allow origins from environment variable (comma-separated)
+        // Default: localhost origins for development
+        // Production: set CORS_ALLOWED_ORIGINS=https://your-app.vercel.app
+        configuration.setAllowedOrigins(Arrays.asList(corsAllowedOrigins.split(",")));
         
         // Allow all HTTP methods
         configuration.setAllowedMethods(Arrays.asList(

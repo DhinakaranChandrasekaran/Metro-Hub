@@ -1,0 +1,92 @@
+# ============================================
+# MetroHub - Docker Compose
+# ============================================
+# LOCAL DEVELOPMENT ONLY
+# Do NOT use this for production deployment.
+#
+# Production architecture:
+#   React → Vercel
+#   Spring Boot Docker → Render
+#   MySQL → Aiven Managed MySQL
+# ============================================
+
+services:
+  # ============================================
+  # MySQL Database (Local Development Only)
+  # ============================================
+  mysql:
+    image: mysql:8.0
+    container_name: metrohub-mysql
+    restart: unless-stopped
+    ports:
+      - "3307:3306"   # Host port 3307 to avoid conflicts with local MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Metrohub@123}
+      MYSQL_DATABASE: metrohub_db
+    volumes:
+      - metrohub-mysql-data:/var/lib/mysql                        # Persist data across restarts
+      - ./database/metro_hub.sql:/docker-entrypoint-initdb.d/init.sql  # Auto-initialize on first run
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Metrohub@123}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - metrohub-network
+
+  # ============================================
+  # Spring Boot Backend
+  # ============================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: metrohub-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      # Override DB_URL to use Docker service name instead of localhost
+      DB_URL: jdbc:mysql://mysql:3306/metrohub_db?useSSL=false&serverTimezone=Asia/Kolkata&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+      TESSDATA_PREFIX: /usr/share/tessdata
+      PORT: 8080
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - metrohub-network
+
+  # ============================================
+  # React Frontend (Nginx)
+  # ============================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://localhost:8080/api
+    container_name: metrohub-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - metrohub-network
+
+# ============================================
+# Named Volumes
+# ============================================
+volumes:
+  metrohub-mysql-data:
+    driver: local
+
+# ============================================
+# Network
+# ============================================
+networks:
+  metrohub-network:
+    driver: bridge
