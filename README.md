@@ -47,27 +47,16 @@ The system addresses critical challenges faced by metro organizations:
 |------------|---------|---------|
 | Java | 17 | Core language |
 | Spring Boot | 3.2.2 | Application framework |
-| Spring Security | 6.x | Authentication & authorization |
-| Spring Data JPA | 3.x | Database ORM |
 | MySQL | 8.0+ | Primary database |
-| Apache Tika | 2.9.1 | PDF/Word text extraction |
 | Tesseract (Tess4J) | 5.8.0 | OCR for scanned images |
-| JWT (jjwt) | 0.12.3 | Token-based authentication |
-| Apache POI | 5.2.5 | Excel report generation |
-| OpenPDF | 1.3.35 | PDF report generation |
 | AWS SDK v2 | 2.25.11 | S3 cloud storage |
 | Twilio SDK | 10.1.5 | SMS notifications |
-| Spring Mail | - | Email notifications |
-| Lombok | 1.18.30 | Boilerplate reduction |
 
 ### Frontend
 | Technology | Version | Purpose |
 |------------|---------|---------|
 | React | 18.x | UI framework |
 | React Router | 6.x | Client-side routing |
-| Axios | - | HTTP client |
-| React Icons (Fa) | - | Icon library |
-| Vanilla CSS | - | Custom styling (no Tailwind) |
 
 ---
 
