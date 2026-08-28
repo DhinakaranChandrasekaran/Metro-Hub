@@ -71,12 +71,12 @@ The system addresses critical challenges faced by metro organizations:
 
 ---
 
-**## Role-Based Access Control (RBAC)
-**
+### Role-Based Access Control (RBAC)
+
 MetroHub implements a 4-role RBAC system with granular permissions:
 
-**### Role Hierarchy
-**
+### Role Hierarchy
+
 | Role | Scope | Description |
 |------|-------|-------------|
 | **SUPER_ADMIN** | Global | Full system access. Views all departments' data. Can remove legal holds, manage all users, access all analytics. |
@@ -84,7 +84,7 @@ MetroHub implements a 4-role RBAC system with granular permissions:
 | **DEPARTMENT_UPLOAD_ADMIN** | Department | Uploads documents, sets SLA, applies legal holds. Manages acknowledgements and policies for their department. |
 | **DEPARTMENT_USER** | Department | End user. Views documents in their department, acknowledges them, receives notifications. |
 
-**### Permission Matrix
+### Permission Matrix
 **
 | Permission | Super Admin | Dept Admin | Upload Admin | Dept User |
 |------------|:-----------:|:----------:|:------------:|:---------:|
@@ -110,8 +110,8 @@ MetroHub implements a 4-role RBAC system with granular permissions:
 
 ---
 
-**## Module-by-Module Breakdown
-**
+## Module-by-Module Breakdown
+
 ### 1. Authentication & Authorization
 
 - **Login Flow:** Email + Password → BCrypt verification → JWT access token (24h) + refresh token (7d)
