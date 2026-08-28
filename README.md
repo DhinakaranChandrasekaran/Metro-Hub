@@ -90,15 +90,15 @@ The system addresses critical challenges faced by metro organizations:
 ┌─────────────────────────────┼────────────────────────────────────┐
 │                     BACKEND (Spring Boot 3.2)                    │
 │  ┌──────────────────────────┴─────────────────────────────────┐  │
-│  │                    Controller Layer (9)                    │  │
+│  │                    Controller Layer                        │  │
 │  │  Auth │ Document │ Dashboard │ Alert │ Analytics │ ...     │  │
 │  └──────────────────────────┬─────────────────────────────────┘  │
 │  ┌──────────────────────────┴─────────────────────────────────┐  │
-│  │                     Service Layer (26)                     │  │
+│  │                     Service Layer                          │  │
 │  │  AuthService │ DocumentService │ ComplianceScheduler │ ... │  │
 │  └──────────────────────────┬─────────────────────────────────┘  │
 │  ┌──────────────────────────┴─────────────────────────────────┐  │
-│  │                   Repository Layer (11)                    │  │
+│  │                   Repository Layer                         │  │
 │  │               Spring Data JPA + Custom Queries             │  │
 │  └──────────────────────────┬─────────────────────────────────┘  │
 │  ┌──────────────────────────┴─────────────────────────────────┐  │
